@@ -33,36 +33,36 @@ def runner(dataset):
       3. Mapper
       4. Image undistorter
   '''
-  cmd("colmap feature_extractor \
-   --database_path " + dataset + "/database.db \
-   --image_path " + dataset + "/images \
-   --ImageReader.single_camera 1\
-   --ImageReader.camera_model SIMPLE_RADIAL")
+  # cmd("colmap feature_extractor \
+  #  --database_path " + dataset + "/database.db \
+  #  --image_path " + dataset + "/images \
+  #  --ImageReader.single_camera 1\
+  #  --ImageReader.camera_model SIMPLE_RADIAL")
 
-  cmd("colmap exhaustive_matcher \
-   --database_path " + dataset + "/database.db " \
-   "--SiftMatching.guided_matching 1 " \
-   )
+  # cmd("colmap exhaustive_matcher \
+  #  --database_path " + dataset + "/database.db " \
+  #  "--SiftMatching.guided_matching 1 " \
+  #  )
 
-  cmd("mkdir " + dataset + "/sparse")
+  # cmd("mkdir " + dataset + "/sparse")
 
-  cmd("colmap mapper \
-    --database_path " + dataset + "/database.db \
-    --image_path " + dataset + "/images \
-    --Mapper.ba_refine_principal_point 1 \
-    --Mapper.num_threads 16 \
-    --Mapper.extract_colors 0 \
-    --output_path " + dataset + "/sparse")
+  # cmd("colmap mapper \
+  #   --database_path " + dataset + "/database.db \
+  #   --image_path " + dataset + "/images \
+  #   --Mapper.ba_refine_principal_point 1 \
+  #   --Mapper.num_threads 16 \
+  #   --Mapper.extract_colors 0 \
+  #   --output_path " + dataset + "/sparse")
 
-  cmd("mkdir " + dataset + "/dense")
+  # cmd("mkdir " + dataset + "/dense")
 
   cmd("cp -r " + dataset + "/sparse " + dataset +"/sparse_before_undistort")
   cmd("cp -r " + dataset + "/database.db " + dataset +"/sparse_before_undistort/database.db")
-  cmd("colmap image_undistorter \
-    --image_path " + dataset + "/images \
-    --input_path " + dataset + "/sparse/0 \
-    --output_path " + dataset + "/dense \
-    --output_type COLMAP")
+  # cmd("colmap image_undistorter \
+  #   --image_path " + dataset + "/images \
+  #   --input_path " + dataset + "/sparse/0 \
+  #   --output_path " + dataset + "/dense \
+  #   --output_type COLMAP")
   cmd("mv " + dataset + "/images " + dataset +"/images_distort")
   cmd("mv " + dataset +"/dense/images" +" " + dataset +'/images')
 
