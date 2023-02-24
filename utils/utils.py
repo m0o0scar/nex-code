@@ -41,7 +41,7 @@ def getDatasetScale(dpath, deepview_width, llff_width):
       return float(deepview_width / js[0][0]['width'])
   elif is_llff(dpath):
     img0 = [os.path.join(dpath, 'images', f) for f in sorted(os.listdir(os.path.join(dpath, 'images'))) \
-            if f.endswith('JPG') or f.endswith('jpg') or f.endswith('png')][0]
+            if f.endswith('JPG') or f.endswith('jpg') or f.endswith('jpeg') or f.endswith('PNG') or f.endswith('png')][0]
     sh = io.imread(img0).shape
     return float(llff_width / sh[1])
   else:
