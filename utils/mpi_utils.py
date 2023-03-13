@@ -14,7 +14,7 @@ from torch.utils.data import Dataset
 import numpy as np
 import os
 from utils.sfm_utils import SfMData
-from utils.video_path import webGLspiralPath, deepviewInnerCircle
+from utils.video_path import linearPath, webGLspiralPath, deepviewInnerCircle
 import torch as pt
 from collections import deque
 from skimage import io
@@ -309,11 +309,11 @@ def render_video(model, dataset, ray, video_path = 'runs/video/', render_type='d
   elif dataset.sfm.render_poses is not None:
     render_poses = dataset.sfm.render_poses
   else:
-    render_poses = webGLspiralPath(
+    render_poses = linearPath(
       dataset.sfm.ref_img['r'],
       dataset.sfm.ref_img['t'],
       dataset.sfm.dmin,
-      dataset.sfm.dmax
+      dataset.sfm.dmax,
     )
   total_frame = len(render_poses)
   print('Rendering video frame...')

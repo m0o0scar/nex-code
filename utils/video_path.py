@@ -11,6 +11,39 @@
 import numpy as np 
 from scipy.spatial.transform import Rotation, Slerp
 
+def linearPath(ref_rotation, ref_translation, dmin, dmax, total_frame = 48, spin_radius = 10, total_spin = 1):
+  spin_speed = np.pi / total_frame
+  render_poses = {}
+  # matrix conversation helper
+  def dcm_to_4x4(r,t):
+    camera_matrix = np.zeros((4,4),dtype=np.float32)
+    camera_matrix[:3,:3] = r
+    if len(t.shape) > 1:
+      camera_matrix[:3,3:4] = t
+    else:
+      camera_matrix[:3,3] = t
+    camera_matrix[3,3] = 1.0
+    return camera_matrix
+
+  for i in range(total_frame):
+    anim_time = spin_speed * i
+    leftright = np.sin(anim_time) * spin_radius / 500.0
+    updown = 0.
+    r = ref_rotation
+    t = ref_translation
+    cam = dcm_to_4x4(r,t)
+    dist = (dmin + dmax) / 2.0
+    translation_matrix = dcm_to_4x4(np.eye(3), np.array([0,0, -dist]))
+    translation_matrix2 = dcm_to_4x4(np.eye(3), np.array([0,0, dist]))
+    euler_3x3 = Rotation.from_euler('yxz', [leftright, updown, 0]).as_dcm()
+    euler_4x4 = dcm_to_4x4(euler_3x3, np.array([0.0,0.0,0.0]))
+    output = translation_matrix2 @ euler_4x4 @  translation_matrix @ cam
+    output = output.astype(np.float32)
+    r = output[:3, :3]
+    t = output[:3, 3:4]
+    render_poses[i] = {'r': r, 't': t}
+  return render_poses
+
 def webGLspiralPath(ref_rotation, ref_translation, dmin, dmax, total_frame = 120, spin_radius = 10, total_spin = 1):
   spin_speed = 2*np.pi / total_frame * total_spin
   render_poses = {}
